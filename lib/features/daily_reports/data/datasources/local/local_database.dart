@@ -28,6 +28,39 @@ class LocalSiteEvents extends Table {
 @DriftDatabase(tables: [LocalSiteEvents])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
+
+  //get all events query
+  Stream<List<LocalSiteEvent>> watchAllEvents(String siteId) {
+    return (select(
+      localSiteEvents,
+    )..where((tbl) => tbl.siteId.equals(siteId))).watch();
+  }
+
+  //insert event
+  Future<int> insertEvent(LocalSiteEventsCompanion event) {
+    return into(localSiteEvents).insert(event);
+  }
+
+  //delete event
+  Future<int> deleteEvent(String Id) {
+    return (delete(
+      localSiteEvents,
+    )..where((tbl) => tbl.eventId.equals(Id))).go();
+  }
+
+  //get all unsynced events
+  Future<List<LocalSiteEvent>> getPendingEvents() {
+    return (select(
+      localSiteEvents,
+    )..where((tbl) => tbl.syncstatus.equals(0))).get();
+  }
+
+  //mark event as synced
+  Future<void> markAsSynced(String id) {
+    return (update(localSiteEvents)..where((tbl) => tbl.eventId.equals(id)))
+        .write(const LocalSiteEventsCompanion(syncstatus: Value(1)));
+  }
+
   @override
   int get schemaVersion => 1;
 }
