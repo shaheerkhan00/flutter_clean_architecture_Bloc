@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:sitelog/features/daily_reports/domain/entities/site_event.dart';
 import 'package:sitelog/features/daily_reports/domain/repositories/report_repository.dart';
-import 'package:sitelog/features/daily_reports/domain/usecases/get_site_evets.dart';
+import 'package:sitelog/features/daily_reports/domain/usecases/get_site_events.dart';
 
 class MockRepository extends Mock implements ReportRepository {}
 

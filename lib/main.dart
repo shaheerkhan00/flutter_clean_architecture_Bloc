@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:sitelog/features/daily_reports/presentation/pages/daily_report_page.dart';
+import 'injection_container.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize dependencies
+  await init();
   runApp(const MyApp());
 }
 
@@ -30,7 +36,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: DailyReportPage(siteId: 'site123'),
     );
   }
 }

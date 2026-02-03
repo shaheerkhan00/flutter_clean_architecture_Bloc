@@ -1,16 +1,76 @@
 # sitelog
 
-A new Flutter project.
+A Flutter application for logging and tracking events on construction sites. Supports recording labor activities and safety incidents per site, with offline-first local storage and cloud synchronisation via Supabase.
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| UI & State | Flutter, BLoC |
+| Dependency Injection | get_it + injectable |
+| Local Database | Drift (SQLite) |
+| Networking | Dio + Retrofit |
+| Cloud Backend | Supabase |
+| Serialisation | json_serializable, freezed |
+
+## Project Structure
+
+Follows **Clean Architecture** with a feature-based layout:
+
+```
+lib/
+├── main.dart                   # App entry point
+├── injection.dart              # Dependency injection registration
+├── core/                       # Shared utilities and base classes
+└── features/
+    └── <feature_name>/
+        ├── domain/             # Entities, repository interfaces, use cases
+        ├── data/               # Models, datasources, repository implementations
+        └── presentation/       # BLoC, pages, widgets
+```
+
+Current feature: **daily_reports** — tracks `LaborEvent` and `SafetyIncident` entities per site.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Prerequisites
 
-A few resources to get you started if this is your first Flutter project:
+- Flutter SDK (stable channel)
+- Dart SDK ^3.9.2
+- A Supabase project (for cloud sync)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Setup
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+# Install dependencies
+flutter pub get
+
+# Generate serialisation / DI / database code
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
+### Run
+
+```bash
+flutter run
+```
+
+### Test
+
+```bash
+# All tests
+flutter test
+
+# Single test file
+flutter test test/features/daily_reports/usecases/add_site_event_test.dart
+```
+
+### Lint
+
+```bash
+flutter analyze
+```
+
+## Platforms
+
+Android, iOS, macOS, Linux, Windows, Web.
