@@ -60,3 +60,6 @@ supabase/.local/
 **/*.drift.dart
 **/*.freezed.dart
 lib/injection.g.dart
+
+# Claude Code
+CLAUDE.md

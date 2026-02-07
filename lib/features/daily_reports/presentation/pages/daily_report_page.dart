@@ -20,84 +20,104 @@ class DailyReportPage extends StatelessWidget {
         builder: (context) {
           return Scaffold(
             appBar: AppBar(title: const Text('Daily Report')),
-            body: BlocBuilder<DailyReportBloc, DailyReportState>(
-              builder: (context, state) {
-                // State 1: Loading
-                if (state is DailyReportLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                // State 2: Loaded (Success)
-                else if (state is DailyReportLoaded) {
-                  if (state.events.isEmpty) {
-                    return const Center(
-                      child: Text("No events yet. Click + to start."),
-                    );
-                  }
-
-                  // The List
-                  return ListView.builder(
-                    itemCount: state.events.length,
-                    itemBuilder: (context, index) {
-                      final event = state.events[index];
-                      return Dismissible(
-                        background: Container(
-                          color: Colors.red,
-                          alignment: Alignment.centerRight,
-                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                          child: const Icon(Icons.delete, color: Colors.white),
-                        ),
-                        key: Key(event.eventId),
-                        direction: DismissDirection.endToStart,
-                        onDismissed: (direction) {
-                          context.read<DailyReportBloc>().add(
-                            DeleteEvent(event.eventId),
-                          );
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Event deleted')),
-                          );
-                        },
-
-                        child: Card(
-                          margin: const EdgeInsets.all(8.0),
-                          child: ListTile(
-                            leading: Icon(
-                              event is LaborEvent ? Icons.group : Icons.warning,
-                              color: event is LaborEvent
-                                  ? Colors.blue
-                                  : Colors.orange,
-                            ),
-
-                            title: Text(event.description),
-                            subtitle: Text(
-                              event is LaborEvent
-                                  ? 'Workers: ${event.workerCount}'
-                                  : 'Severity: ${(event as SafetyIncident).severity}'
-                                        .split('.')
-                                        .last,
-                            ),
-                            trailing: Text(
-                              '${event.timestamp.hour}: ${event.timestamp.minute.toString().padLeft(2, '0')}',
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                }
-                // State 3: Error
-                else if (state is DailyReportError) {
-                  return Center(
-                    child: Text(
-                      state.message,
-                      style: const TextStyle(color: Colors.red),
+            body: BlocListener<DailyReportBloc, DailyReportState>(
+              listener: (context, state) {
+                if (state is DailyReportLoaded && state.uiMessage != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(state.uiMessage!),
+                      backgroundColor: Colors.red,
                     ),
                   );
                 }
-
-                // State 4: Initial (Should be fast, but just in case)
-                return const Center(child: CircularProgressIndicator());
               },
+
+              child: BlocBuilder<DailyReportBloc, DailyReportState>(
+                builder: (context, state) {
+                  // State 1: Loading
+                  if (state is DailyReportLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  // State 2: Loaded (Success)
+                  else if (state is DailyReportLoaded) {
+                    if (state.events.isEmpty) {
+                      return const Center(
+                        child: Text("No events yet. Click + to start."),
+                      );
+                    }
+
+                    // The List
+                    return ListView.builder(
+                      itemCount: state.events.length,
+                      itemBuilder: (context, index) {
+                        final event = state.events[index];
+                        return Dismissible(
+                          background: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0,
+                            ),
+                            child: const Icon(
+                              Icons.delete,
+                              color: Colors.white,
+                            ),
+                          ),
+                          key: Key(event.eventId),
+                          direction: DismissDirection.endToStart,
+                          onDismissed: (direction) {
+                            context.read<DailyReportBloc>().add(
+                              DeleteEvent(event.eventId),
+                            );
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Event deleted')),
+                            );
+                          },
+
+                          child: Card(
+                            margin: const EdgeInsets.all(8.0),
+                            child: ListTile(
+                              leading: Icon(
+                                event is LaborEvent
+                                    ? Icons.group
+                                    : Icons.warning,
+                                color: event is LaborEvent
+                                    ? Colors.blue
+                                    : Colors.orange,
+                              ),
+
+                              title: Text(event.description),
+                              subtitle: Text(
+                                event is LaborEvent
+                                    ? 'Workers: ${event.workerCount}'
+                                    : 'Severity: ${(event as SafetyIncident).severity}'
+                                          .split('.')
+                                          .last,
+                              ),
+                              trailing: Text(
+                                '${event.timestamp.hour}: ${event.timestamp.minute.toString().padLeft(2, '0')}',
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                  // State 3: Error
+                  else if (state is DailyReportError) {
+                    return Center(
+                      child: Text(
+                        state.message,
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                    );
+                  }
+
+                  // State 4: Initial (Should be fast, but just in case)
+                  return const Center(child: CircularProgressIndicator());
+                },
+              ),
             ),
             floatingActionButton: FloatingActionButton(
               onPressed: () {

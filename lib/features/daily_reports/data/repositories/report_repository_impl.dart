@@ -8,6 +8,7 @@ class ReportRepositoryImpl implements ReportRepository {
   ReportRepositoryImpl(this.database);
   @override
   Future<void> addSiteEvent(SiteEvent event) async {
+    print("add event called in repository with event: ${event.eventId}");
     final companion = _maptoCompanion(event);
     await database.insertEvent(companion);
   }

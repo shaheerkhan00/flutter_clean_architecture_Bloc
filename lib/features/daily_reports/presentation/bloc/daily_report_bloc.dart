@@ -28,7 +28,13 @@ class DailyReportBloc extends Bloc<DailyReportEvent, DailyReportState> {
       try {
         await addSiteEvent(event.event);
       } catch (e) {
-        emit(const DailyReportError("Failed to add event"));
+        if (state is DailyReportLoaded) {
+          final currentList = (state as DailyReportLoaded).events;
+          emit(DailyReportLoaded(currentList, uiMessage: e.toString()));
+          emit(DailyReportLoaded(currentList, uiMessage: null));
+        } else {
+          emit(const DailyReportError("Failed to add event"));
+        }
       }
     });
     on<DeleteEvent>((event, emit) async {

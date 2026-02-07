@@ -13,9 +13,10 @@ class DailyReportLoading extends DailyReportState {}
 
 class DailyReportLoaded extends DailyReportState {
   final List<SiteEvent> events;
-  const DailyReportLoaded(this.events);
+  final String? uiMessage;
+  const DailyReportLoaded(this.events, {this.uiMessage});
   @override
-  List<Object?> get props => [events];
+  List<Object?> get props => [events, uiMessage];
 }
 
 class DailyReportError extends DailyReportState {
