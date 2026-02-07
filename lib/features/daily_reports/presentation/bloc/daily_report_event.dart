@@ -16,14 +16,16 @@ class LoadEvents extends DailyReportEvent {
 
 class AddEvent extends DailyReportEvent {
   final SiteEvent event;
-  const AddEvent(this.event);
+  final String? uiMessage;
+  const AddEvent(this.event, {this.uiMessage});
   @override
-  List<Object?> get props => [event];
+  List<Object?> get props => [event, uiMessage];
 }
 
 class DeleteEvent extends DailyReportEvent {
   final String eventId;
-  const DeleteEvent(this.eventId);
+  final String? uiMessage;
+  const DeleteEvent(this.eventId, {this.uiMessage});
   @override
-  List<Object?> get props => [eventId];
+  List<Object?> get props => [eventId, uiMessage];
 }
