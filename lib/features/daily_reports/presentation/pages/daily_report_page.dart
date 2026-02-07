@@ -19,7 +19,17 @@ class DailyReportPage extends StatelessWidget {
       child: Builder(
         builder: (context) {
           return Scaffold(
-            appBar: AppBar(title: const Text('Daily Report')),
+            appBar: AppBar(
+              title: const Text('Daily Report'),
+              actions: [
+                IconButton(
+                  onPressed: () => context.read<DailyReportBloc>().add(
+                    const SyncReportsEvent(),
+                  ),
+                  icon: Icon(Icons.sync),
+                ),
+              ],
+            ),
             body: BlocListener<DailyReportBloc, DailyReportState>(
               listener: (context, state) {
                 if (state is DailyReportLoaded && state.uiMessage != null) {
@@ -94,9 +104,30 @@ class DailyReportPage extends StatelessWidget {
                                           .split('.')
                                           .last,
                               ),
-                              trailing: Text(
-                                '${event.timestamp.hour}: ${event.timestamp.minute.toString().padLeft(2, '0')}',
-                                style: const TextStyle(color: Colors.grey),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize
+                                    .min, // <--- This keeps the Row tight to the right
+                                children: [
+                                  // 1. The Timestamp (Your existing code)
+                                  Text(
+                                    '${event.timestamp.hour}:${event.timestamp.minute.toString().padLeft(2, '0')}',
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+
+                                  // 2. Small Gap
+                                  const SizedBox(width: 8),
+
+                                  // 3. The Sync Icon (New!)
+                                  Icon(
+                                    event.isSynced
+                                        ? Icons.cloud_done
+                                        : Icons.cloud_off,
+                                    color: event.isSynced
+                                        ? Colors.green
+                                        : Colors.grey,
+                                    size: 16, // Keep it subtle
+                                  ),
+                                ],
                               ),
                             ),
                           ),

@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:sitelog/features/daily_reports/presentation/pages/daily_report_page.dart';
 import 'injection_container.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize dependencies
+  await dotenv.load(fileName: ".env");
+  await Supabase.initialize(
+    url: dotenv.env['SUPABASE_URL']!,
+    anonKey: dotenv.env['SUPABASE_ANON_KEY']!,
+  );
   await init();
   runApp(const MyApp());
 }

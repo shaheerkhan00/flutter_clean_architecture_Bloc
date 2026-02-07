@@ -29,3 +29,9 @@ class DeleteEvent extends DailyReportEvent {
   @override
   List<Object?> get props => [eventId, uiMessage];
 }
+
+class SyncReportsEvent extends DailyReportEvent {
+  const SyncReportsEvent();
+  @override
+  List<Object?> get props => [];
+}

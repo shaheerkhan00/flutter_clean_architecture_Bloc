@@ -3,7 +3,7 @@ import 'package:sitelog/features/daily_reports/domain/entities/site_event.dart';
 
 part 'site_event_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class LaborEventModel extends LaborEvent {
   const LaborEventModel({
     required String eventId,
@@ -26,7 +26,7 @@ class LaborEventModel extends LaborEvent {
       _$LaborEventModelToJson(this)..['type'] = 'labor';
 }
 
-@JsonSerializable()
+@JsonSerializable(fieldRename: FieldRename.snake)
 class SafetyIncidentModel extends SafetyIncident {
   const SafetyIncidentModel({
     required String eventId,
@@ -46,5 +46,5 @@ class SafetyIncidentModel extends SafetyIncident {
       _$SafetyIncidentModelFromJson(json);
 
   Map<String, dynamic> toJson() =>
-      _$SafetyIncidentModelToJson(this)..['type'] = 'safety_incident';
+      _$SafetyIncidentModelToJson(this)..['type'] = 'safety';
 }
